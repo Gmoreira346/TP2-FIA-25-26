@@ -1,0 +1,82 @@
+12/5/2026
+
+A avaliar 5 runs da Experiencia_1...
+  Run 0: Sucesso = 57.99999999999999% | Fitness = 574.87
+  Run 1: Sucesso = 8.0% | Fitness = -18.99
+  Run 2: Sucesso = 86.0% | Fitness = 883.45
+  Run 3: Sucesso = 13.0% | Fitness = 81.32
+  Run 4: Sucesso = 47.0% | Fitness = 462.44
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 42.40% ± 29.03%
+Fitness Médio:   396.62 ± 330.23
+A avaliar 5 runs da Experiencia_2...
+  Run 0: Sucesso = 93.0% | Fitness = 959.09
+  Run 1: Sucesso = 96.0% | Fitness = 992.74
+  Run 2: Sucesso = 79.0% | Fitness = 807.79
+  Run 3: Sucesso = 94.0% | Fitness = 964.95
+  Run 4: Sucesso = 95.0% | Fitness = 981.79
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 91.40% ± 6.28%
+Fitness Médio:   941.27 ± 67.80
+A avaliar 5 runs da Experiencia_3...
+  Run 0: Sucesso = 95.0% | Fitness = 984.52
+  Run 1: Sucesso = 95.0% | Fitness = 984.09
+  Run 2: Sucesso = 99.0% | Fitness = 1026.05
+  Run 3: Sucesso = 99.0% | Fitness = 1027.14
+  Run 4: Sucesso = 97.0% | Fitness = 1004.63
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 97.00% ± 1.79%
+Fitness Médio:   1005.28 ± 18.92
+A avaliar 5 runs da Experiencia_4...
+  Run 0: Sucesso = 94.0% | Fitness = 970.71
+  Run 1: Sucesso = 98.0% | Fitness = 1015.47
+  Run 2: Sucesso = 100.0% | Fitness = 1037.11
+  Run 3: Sucesso = 97.0% | Fitness = 1001.64
+  Run 4: Sucesso = 89.0% | Fitness = 890.41
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 95.60% ± 3.83%
+Fitness Médio:   983.07 ± 51.10
+A avaliar 5 runs da Experiencia_5...
+  Run 0: Sucesso = 28.000000000000004% | Fitness = 272.78
+  Run 1: Sucesso = 2.0% | Fitness = -93.07
+  Run 2: Sucesso = 89.0% | Fitness = 916.65
+  Run 3: Sucesso = 4.0% | Fitness = -80.13
+  Run 4: Sucesso = 1.0% | Fitness = -144.97
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 24.80% ± 33.62%
+Fitness Médio:   174.25 ± 399.74
+A avaliar 5 runs da Experiencia_6...
+  Run 0: Sucesso = 90.0% | Fitness = 927.33
+  Run 1: Sucesso = 23.0% | Fitness = 187.57
+  Run 2: Sucesso = 97.0% | Fitness = 1005.95
+  Run 3: Sucesso = 90.0% | Fitness = 923.00
+  Run 4: Sucesso = 71.0% | Fitness = 709.16
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 74.20% ± 27.02%
+Fitness Médio:   750.60 ± 298.29
+A avaliar 5 runs da Experiencia_7...
+  Run 0: Sucesso = 83.0% | Fitness = 845.12
+  Run 1: Sucesso = 95.0% | Fitness = 976.61
+  Run 2: Sucesso = 99.0% | Fitness = 1023.99
+  Run 3: Sucesso = 92.0% | Fitness = 952.03
+  Run 4: Sucesso = 78.0% | Fitness = 798.37
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 89.40% ± 7.76%
+Fitness Médio:   919.22 ± 84.19
+A avaliar 5 runs da Experiencia_8...
+  Run 0: Sucesso = 92.0% | Fitness = 954.18
+  Run 1: Sucesso = 87.0% | Fitness = 897.83
+  Run 2: Sucesso = 93.0% | Fitness = 954.32
+  Run 3: Sucesso = 100.0% | Fitness = 1037.06
+  Run 4: Sucesso = 56.00000000000001% | Fitness = 525.69
+
+--- RESULTADOS FINAIS ---
+Taxa de Sucesso: 85.60% ± 15.37%
+Fitness Médio:   873.81 ± 179.64

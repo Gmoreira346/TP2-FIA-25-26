@@ -74,21 +74,26 @@ def objective_function(observation_history):
     # Descompactar as variáveis da observação para ser mais legível
     x, y, vx, vy, angle, v_angle, left_leg, right_leg = final_obs
     
+    # 1. Penalização pela distância ao centro (0,0)
     # Usamos a distância Euclidiana para uma aproximação suave à plataforma
     distance = np.sqrt(x**2 + y**2)
     fitness = -distance * 100 
     
+    # 2. Penalização por velocidade alta
     # Fundamental para que a nave aprenda a usar os motores para travar
     speed = np.sqrt(vx**2 + vy**2)
     fitness -= speed * 100
     
+    # 3. Penalização por má postura (inclinação e velocidade angular)
     # Queremos que a nave desça direita e estabilizada
     fitness -= abs(angle) * 100
     fitness -= abs(v_angle) * 50
     
+    # 4. Recompensa de contacto
     # Dá uns pontos extra por cada perna que tocar no solo de forma segura
     fitness += (left_leg + right_leg) * 20
     
+    # 5. O Grande Bónus de Sucesso
     # Se a nave cumprir todos os requisitos de uma aterragem perfeita, 
     # recebe um bónus gigante para "carimbar" a excelência desse genótipo.
     success = check_successful_landing(final_obs)

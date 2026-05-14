@@ -1,0 +1,9 @@
+selections = [("Torneio", tournament_selection), 
+                  ("Top10%", best_selection), 
+                  ("Aleatório", random_selection)]
+    
+    crossovers = [("Unif", uniform_crossover), 
+                  ("1Ponto", one_point_crossover)]
+    
+    mutations = [("Gauss", gaussian_mutation), 
+                 ("Uniforme", uniform_mutation)]

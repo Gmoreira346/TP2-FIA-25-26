@@ -4,6 +4,7 @@ import numpy as np
 import gymnasium as gym 
 import os
 from multiprocessing import Process, Queue
+import matplotlib.pyplot as plt
 
 # CONFIG
 ENABLE_WIND = False
@@ -286,101 +287,89 @@ def load_bests(fname):
     return bests
 
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
 
-    # --to evolve the controller--    
-    evolve = False # Set to True to run the evolutionary algorithm and generate logs
-    # --to analyze the results of an experiment--
-    render_mode = None
+    # Definições base (A Melhor Combinação: Exp 3)
+    PROB_MUTATION = 0.008
+    PROB_CROSSOVER = 0.9
+    ELITE_SIZE = 0
+    
+    tamanhos_populacao = [10, 30, 50, 100, 150]
+    n_runs = 3 # Reduzido para 3 para poupar tempo de computação
+    seeds = [964, 952, 364]
+    ntests = 50 # Número de simulações para avaliar o fitness final
+    
+    fitness_medio_por_populacao = []
 
-    if evolve:
-        # Configurações das 8 experiências exigidas na Tabela 2 do enunciado
-        experiencias = [
-            {'id': 1, 'mut': 0.008, 'cx': 0.5, 'elite': 0},
-            {'id': 2, 'mut': 0.050, 'cx': 0.5, 'elite': 0},
-            {'id': 3, 'mut': 0.008, 'cx': 0.9, 'elite': 0},
-            {'id': 4, 'mut': 0.050, 'cx': 0.9, 'elite': 0},
-            {'id': 5, 'mut': 0.008, 'cx': 0.5, 'elite': 1},
-            {'id': 6, 'mut': 0.050, 'cx': 0.5, 'elite': 1},
-            {'id': 7, 'mut': 0.008, 'cx': 0.9, 'elite': 1},
-            {'id': 8, 'mut': 0.050, 'cx': 0.9, 'elite': 1},
-        ]
+    print("==================================================")
+    print(" A INICIAR ESTUDO DO TAMANHO DA POPULAÇÃO")
+    print(" Parâmetros fixos: Mut = 0.008 | CX = 0.9 | Elite = 0")
+    print("==================================================")
 
-        n_runs = 5
-        # Selecionamos 5 seeds da lista original para garantir reprodutibilidade
-        seeds = [964, 952, 364, 913, 140] 
-
-        for exp in experiencias:
-            print(f"\n=========================================")
-            print(f" A INICIAR EXPERIÊNCIA {exp['id']}")
-            print(f" Mutação: {exp['mut']} | Crossover: {exp['cx']} | Elitismo: {exp['elite']}")
-            print(f"=========================================")
+    for pop_size in tamanhos_populacao:
+        POPULATION_SIZE = pop_size # Atualiza a variável global
+        print(f"\n-> A testar População de tamanho: {POPULATION_SIZE}")
+        
+        fitness_runs = []
+        
+        for i in range(n_runs):    
+            print(f"   Run {i+1}/{n_runs} (Seed: {seeds[i]})...")
+            random.seed(seeds[i])
+            np.random.seed(seeds[i])
             
-            # 1. Atualizar as variáveis globais dinamicamente
-            PROB_MUTATION = exp['mut']
-            PROB_CROSSOVER = exp['cx']
-            ELITE_SIZE = exp['elite']
+            # Evoluir com este tamanho de população
+            bests = evolution()
             
-            # 2. Criar uma pasta específica para esta experiência
-            pasta_exp = f"Experiencia_{exp['id']}"
-            os.makedirs(pasta_exp, exist_ok=True)
-
-            # 3. Correr as 5 repetições
-            for i in range(n_runs):    
-                print(f"  -> A executar Run {i+1}/{n_runs} (Seed: {seeds[i]})...")
-                
-                # Definir as seeds para garantir que os resultados são iguais se repetir
-                random.seed(seeds[i])
-                np.random.seed(seeds[i])
-                
-                # Correr o Algoritmo Evolucionário
-                bests = evolution()
-                
-                # 4. Guardar o log dentro da pasta da experiência
-                caminho_ficheiro = os.path.join(pasta_exp, f'log{i}.txt')
-                with open(caminho_ficheiro, 'w') as f:
-                    for b in bests:
-                        f.write(f'{b[1]}\t{SHAPE}\t{b[0]}\n')
-                        
-            print(f" Experiência {exp['id']} concluída! Logs guardados em '{pasta_exp}/'")
-
-    else:
-
-        for i in range(1, 9):
-            pasta_exp = f'Experiencia_{i}' # Pasta a analizar
-            n_runs = 5
-            ntests = 100 # Reduza um pouco os testes se quiser que seja mais rápido (ex: 100 em vez de 1000)
+            # Avaliar o melhor indivíduo da última geração
+            melhor_genotipo = bests[-1][0]
             
-            fitness_runs = []
-            sucesso_runs = []
-
-            print(f"A avaliar {n_runs} runs da {pasta_exp}...")
-            
-            for i in range(n_runs):
-                filename = f'{pasta_exp}/log{i}.txt'
-                bests = load_bests(filename)
-                b = bests[-1] # Melhor indivíduo da última geração desta run
-                SHAPE = b[1]
-                ind = {'genotype': b[2], 'fitness': None}
+            fit_total = 0
+            for _ in range(ntests):
+                f, _ = simulate(melhor_genotipo, render_mode=None, seed=None)
+                fit_total += f
                 
-                fit_total, success_total = 0, 0
-                for _ in range(ntests):
-                    f, s = simulate(ind['genotype'], render_mode=None, seed=None)
-                    fit_total += f
-                    success_total += s
-                    
-                taxa_sucesso = (success_total / ntests) * 100
-                fitness_medio_run = fit_total / ntests
-                
-                fitness_runs.append(fitness_medio_run)
-                sucesso_runs.append(taxa_sucesso)
-                print(f"  Run {i}: Sucesso = {taxa_sucesso}% | Fitness = {fitness_medio_run:.2f}")
-
-            # Calcular Média e Desvio Padrão
-            media_sucesso = np.mean(sucesso_runs)
-            std_sucesso = np.std(sucesso_runs)
-            media_fit = np.mean(fitness_runs)
-            std_fit = np.std(fitness_runs)
+            fitness_final_run = fit_total / ntests
+            fitness_runs.append(fitness_final_run)
+            print(f"   -> Fitness da Run: {fitness_final_run:.2f}")
             
-            print("\n--- RESULTADOS FINAIS ---")
-            print(f"Taxa de Sucesso: {media_sucesso:.2f}% ± {std_sucesso:.2f}%")
-            print(f"Fitness Médio:   {media_fit:.2f} ± {std_fit:.2f}")
+        media_pop = np.mean(fitness_runs)
+        fitness_medio_por_populacao.append(media_pop)
+        print(f" => Média para População {POPULATION_SIZE}: {media_pop:.2f}")
+
+    print("\n==================================================")
+    print(" ESTUDO CONCLUÍDO! A GERAR GRÁFICO...")
+    print("==================================================")
+
+    # ---------------------------------------------------------
+    # GERAÇÃO DO GRÁFICO (CURVA DE COTOVELO)
+    # ---------------------------------------------------------
+    plt.figure(figsize=(10, 6))
+
+    # Criar a linha do gráfico
+    plt.plot(tamanhos_populacao, fitness_medio_por_populacao, marker='o', markersize=8, 
+             linewidth=2.5, color='#ff7f0e', label='Fitness Médio Final')
+
+    # Destacar o ponto "100" que é o nosso cotovelo
+    if 100 in tamanhos_populacao:
+        idx_100 = tamanhos_populacao.index(100)
+        fit_100 = fitness_medio_por_populacao[idx_100]
+        plt.annotate('Ponto de Cotovelo\n(População = 100)', 
+                     xy=(100, fit_100), xytext=(120, fit_100 - 200),
+                     arrowprops=dict(facecolor='black', shrink=0.05, width=1.5, headwidth=8),
+                     fontsize=11, fontweight='bold', ha='center')
+
+    # Linha de referência (1000)
+    plt.axhline(y=1000, color='gray', linestyle='--', alpha=0.7, label='Limiar de Sucesso (~1000)')
+
+    # Formatação do gráfico
+    plt.title('Estudo do Tamanho da População (Curva de Cotovelo)', fontsize=14, fontweight='bold')
+    plt.xlabel('Tamanho da População', fontsize=12)
+    plt.ylabel('Fitness Médio (Após Treino)', fontsize=12)
+    plt.grid(True, linestyle=':', alpha=0.6)
+    plt.legend(loc='lower right')
+    plt.xticks(tamanhos_populacao)
+
+    plt.tight_layout()
+    plt.savefig('estudo_populacao_real.png', dpi=300)
+    print("Gráfico guardado como 'estudo_populacao_real.png'!")
+    plt.show()
